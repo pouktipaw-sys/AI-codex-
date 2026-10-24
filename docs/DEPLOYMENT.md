@@ -53,3 +53,9 @@ The shared demo is not tenant-isolated: invited visitors see the same fictional 
 For local container persistence, mount a Docker volume at /var/data (scripts/test_container.py exercises this). The free Render deployment deliberately has no such volume. Durable cloud storage would require a separately configured datastore; it is not claimed here.
 
 References checked: https://render.com/docs/free and https://render.com/docs/blueprint-spec.
+
+
+## Current verified service
+The free demo is live at https://flowstate-ai-demo.onrender.com (verified 24 October 2026).
+Manage it at https://dashboard.render.com/web/srv-dbed72q9lscs73apc420.
+The service uses the Free compute plan and manual deployments. No paid disk or database was created. Retrieve the private visitor password from FLOW_DEMO_PASSWORD in the service Environment page; no secrets are stored in this repository.
