@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: flowstate-ai
+    runtime: docker
+    plan: starter
+    region: frankfurt
+    healthCheckPath: /healthz
+    autoDeployTrigger: checksPass
+    disk:
+      name: flowstate-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: FLOW_ENVIRONMENT
+        value: hosted
+      - key: FLOW_PROVIDER
+        value: local
+      - key: FLOW_DATABASE_URL
+        value: sqlite:////var/data/flowstate/flowstate.db
+      - key: FLOW_API_TOKEN
+        generateValue: true
+      - key: FLOW_DEMO_PASSWORD
+        sync: false
