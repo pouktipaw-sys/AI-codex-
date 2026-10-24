@@ -27,7 +27,7 @@ export function ActionCard({action, onDecision}: {action: Action; onDecision: (d
   </article>;
 }
 
-export default function App() {
+export default function App({onSignOut}: {onSignOut?: () => void} = {}) {
   const [page, setPage] = useState('Overview');
   const [incidents, setIncidents] = useState<Source[]>([]);
   const [runs, setRuns] = useState<Investigation[]>([]);
@@ -131,7 +131,7 @@ export default function App() {
       </div>
     </aside>
     <main>
-      <header className="topbar"><span>Northstar <span aria-hidden="true">/</span> <strong>{page}</strong></span><div><Badge>FICTIONAL DATA</Badge><span className="top-status">{error ? 'Connection needs attention' : 'Investigation workspace'}</span></div></header>
+      <header className="topbar"><span>Northstar <span aria-hidden="true">/</span> <strong>{page}</strong></span><div><Badge>FICTIONAL DATA</Badge><span className="top-status">{error ? 'Connection needs attention' : 'Investigation workspace'}</span>{onSignOut && <button className="sign-out" onClick={onSignOut}>Sign out</button>}</div></header>
       <div className="content">
         {settings.free_hosting === true && <div className="callout free-demo-notice" role="note"><p><strong>Free demonstration.</strong> The service can sleep when idle and may take a moment to wake up. {settings.storage_mode === 'ephemeral' && <>Investigation history may reset when the server restarts. Download a report to keep a copy.</>}</p></div>}
         {error && <div role="alert" className="alert">{error} <button className="text-button" onClick={() => setPage('Settings')}>Connection settings</button></div>}

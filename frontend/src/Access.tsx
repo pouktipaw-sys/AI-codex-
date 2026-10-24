@@ -61,8 +61,7 @@ export default function Access() {
 
   if (!session.required || session.authenticated) {
     return <>
-      {session.required && <button className="sign-out secondary" onClick={signOut}>Sign out</button>}
-      <App/>
+      <App onSignOut={session.required ? signOut : undefined}/>
       {error && <p role="alert">{error}</p>}
     </>;
   }

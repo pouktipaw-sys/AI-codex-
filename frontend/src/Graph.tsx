@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {ReactFlow, Controls, MarkerType, Node, Edge} from '@xyflow/react';
+import {ReactFlow, Controls, MarkerType, Position, Node, Edge} from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import {api} from './api';
 import {Source} from './types';
@@ -43,6 +43,8 @@ export function EvidenceGraph({id}: {id: string}) {
         return {
           id: record.id,
           position,
+          sourcePosition: Position.Right,
+          targetPosition: Position.Left,
           data: {label: <><span className="graph-node-id">{record.id} / {record.type}</span><span className="graph-node-title">{record.label}</span></>, record},
           style: {
             background: isHypothesis ? '#ede8db' : isService ? '#e0e7de' : '#faf9f3',
