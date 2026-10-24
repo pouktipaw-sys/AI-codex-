@@ -1,57 +1,55 @@
-# Hosted interview demonstration
-The app now builds into one Docker image: Vite's production assets are served by FastAPI on the same origin. A shared-password login issues an HttpOnly, Secure, SameSite=Strict cookie for eight hours. API bearer authentication remains available for local tools; the generated API token is never displayed to visitors. Authentication is a demo access gate, not SSO or per-user identity.
+# Free hosted interview demonstration
 
-## Deploy to Render
-The checked-in render.yaml Blueprint declares one Docker web service in Frankfurt and a 1 GB persistent disk. **This uses Render's paid Starter plan plus disk billing. Review current charges in Render before creating the service.** No paid resource is created by editing the repository.
+The default render.yaml uses one **Free** Docker web service in Frankfurt, no attached disk, no managed database and the deterministic local provider. The interface and FastAPI API are served from the same HTTPS origin.
 
-1. Sign in to Render and connect the GitHub account containing pouktipaw-sys/AI-codex-.
-2. Create a Blueprint from that repository and review render.yaml.
-3. Render automatically generates FLOW_DEMO_PASSWORD and FLOW_API_TOKEN. After deployment, reveal only FLOW_DEMO_PASSWORD in the service Environment page and share it privately with interviewers. Never share FLOW_API_TOKEN. Existing generated values are preserved on later syncs.
-4. Review and accept Render's current service/disk charges before deploying.
-5. Wait for the service's build and health check to pass. Render supplies the HTTPS URL and RENDER_EXTERNAL_HOSTNAME automatically.
-6. Open the URL in a private browser window. Verify login, investigate Northstar, approve an action, sign out and sign back in. Restart the service and verify the history survives.
-7. Only after that verification, add the actual URL to the README/CV. No live deployment URL is claimed in this repository.
+## What is free, and what is limited
+- The service compute plan is Free. No paid service, disk, domain or model API is required.
+- Render sleeps Free services after 15 minutes without incoming traffic. Waking takes about one minute.
+- SQLite is on the ephemeral filesystem: investigations, approval decisions and audit events can be lost on sleep, restart or redeploy. Fictional source records are seeded again. This is explicitly disclosed in the interface. Download reports to keep a local copy.
+- Render grants 750 free instance hours per workspace/month. Bandwidth and build usage have separate included quotas.
+- **To avoid overage charges, do not add a payment method and do not upgrade.** Render's current documentation says that without a payment method it suspends service/builds when relevant free quotas are exhausted. If the workspace already has a payment method, review its usage controls: the Free compute plan alone does not guarantee zero bandwidth/build overages.
+- No keep-alive jobs bypass sleep. No expiring 30-day free Postgres database is provisioned.
+- FLOW_FREE_HOSTING=true rejects non-local model providers or configured provider keys at startup.
 
-The deployment uses local deterministic mode, fictional records and no action executor. One process/instance writes SQLite on /var/data/flowstate/flowstate.db. Do not scale horizontally or remove the disk. Persistent disks are not backups; configure backups/exports before relying on the history.
+This is an invited engineering demonstration, not an always-on production SLA or a durable audit store. Local development retains its normal persistent SQLite behavior.
 
-## One-click entry point
+## Deploy
+Use the connected Render service-creation action with runtime docker, plan free, branch main and the repository URL:
+https://github.com/pouktipaw-sys/AI-codex-
+
+Required environment:
+- FLOW_ENVIRONMENT=hosted
+- FLOW_FREE_HOSTING=true
+- FLOW_STORAGE_MODE=ephemeral
+- FLOW_PROVIDER=local
+- FLOW_DATABASE_URL=sqlite:////var/data/flowstate/flowstate.db
+- FLOW_API_TOKEN: generate at least 32 random characters, never share this server key
+- FLOW_DEMO_PASSWORD: generate at least 12 random characters, share privately with invited interviewers
+
+The connected action does not read render.yaml automatically. Supply the same free plan and variables when creating the service. Never replace free with the default paid plan.
+
+Alternatively, create the complete Blueprint here:
 https://dashboard.render.com/blueprint/new?repo=https://github.com/pouktipaw-sys/AI-codex-
 
-Choose this repository. The deployment requires a Render account, GitHub authorization if prompted, and acceptance of the displayed cost. Both secrets are generated automatically; no password entry is required at creation.
+Both secrets are generated automatically by the Blueprint. Existing values are preserved. Reveal only FLOW_DEMO_PASSWORD in the service's Environment page for visitor access; do not reveal FLOW_API_TOKEN. Render provides the assigned hostname via RENDER_EXTERNAL_HOSTNAME.
 
-## Container run outside Render
-After building the image:
-```bash
-docker volume create flowstate-data
-docker run --rm --name flowstate \
-  -p 127.0.0.1:8000:8000 \
-  --mount source=flowstate-data,target=/var/data \
-  --env-file .env.hosted \
-  flowstate-demo:verified
-```
-Use a private .env.hosted file (never commit it) containing:
-```dotenv
-FLOW_ENVIRONMENT=hosted
-FLOW_API_TOKEN=<random value of at least 32 characters>
-FLOW_DEMO_PASSWORD=<unique password of at least 12 characters>
-FLOW_DATABASE_URL=sqlite:////var/data/flowstate/flowstate.db
-FLOW_ALLOWED_HOSTS=["localhost","127.0.0.1","your-domain.example"]
-```
-Secure cookies require HTTPS: terminate TLS at a trusted reverse proxy for browser login. Loopback HTTP is suitable only for readiness/API smoke checks with bearer auth. Port 8000 binds inside the container; the host binding above remains loopback-only.
+## Verification
+Wait for the specific deploy to reach live, then verify:
+1. HTTPS frontend and assets load.
+2. Anonymous /api/incidents access returns 401.
+3. Correct password establishes a Secure/HttpOnly/SameSite cookie.
+4. Northstar investigation resolves real fixture citations.
+5. Graph and replay load; approval records intent and never executes.
+6. Download report contains the actual investigation.
+7. Sign out removes access; the interface explains ephemeral history.
 
-## Access controls
-- /healthz is a public minimal readiness endpoint for the platform.
-- /api/session is public for login/status/logout; wrong-password attempts are limited to eight per minute per observed client IP per process.
-- /api/* data routes require a valid session or bearer token.
-- Cookie-authenticated writes and login/logout require the app's custom request header and matching Origin host when present. No CORS is enabled.
-- Hosted startup refuses missing/short secrets or a missing frontend build.
-- Hosts are restricted to explicit configuration plus Render's assigned hostname.
-- Built frontend assets are public; they contain no credentials or source data.
-- Hosted OpenAPI/Swagger UI is disabled. CSP, frame denial, HSTS and no-store headers are applied.
+Do not put a guessed onrender.com URL on a CV. Use only the URL returned by the service after successful verification.
 
-Shared visitors can see and alter the same fictional investigation history. This is intentional for a small invited demo. It is not a multi-tenant product. Sessions are stateless; sign-out clears the browser cookie, and rotating FLOW_API_TOKEN invalidates all sessions. Brute-force protection is in-memory and should be replaced with edge/shared rate limits for broader exposure.
+## Access and storage
+The public /healthz endpoint exposes minimal readiness. Data endpoints require a session or bearer token. Hosted mode refuses missing secrets or a missing frontend build. Cookie writes require the app's custom request header and matching Origin host if supplied. OpenAPI is disabled in hosted mode. Frame denial, CSP, HSTS and no-store headers are set.
 
-## Current verification boundary
-Local tests and container checks are documented in VERIFICATION.md. Render provisioning, HTTPS, disk persistence across Render restarts and actual public access must be confirmed on the deployed service. Do not describe the application as online until the platform returns a successful deployment and the access flow is verified.
+The shared demo is not tenant-isolated: invited visitors see the same fictional data/history until reset. Sessions expire after eight hours. Rotate FLOW_API_TOKEN to invalidate all sessions.
 
-The current Render connection can create web services but does not expose attached-disk or Blueprint-creation operations. This Blueprint applies the complete service and persistent disk together through the Dashboard. Creating only the web service via the connection would not attach the disk or make SQLite persistent.
+For local container persistence, mount a Docker volume at /var/data (scripts/test_container.py exercises this). The free Render deployment deliberately has no such volume. Durable cloud storage would require a separately configured datastore; it is not claimed here.
+
+References checked: https://render.com/docs/free and https://render.com/docs/blueprint-spec.

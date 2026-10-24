@@ -2,17 +2,17 @@ services:
   - type: web
     name: flowstate-ai
     runtime: docker
-    plan: starter
+    plan: free
     region: frankfurt
     healthCheckPath: /healthz
     autoDeployTrigger: checksPass
-    disk:
-      name: flowstate-data
-      mountPath: /var/data
-      sizeGB: 1
     envVars:
       - key: FLOW_ENVIRONMENT
         value: hosted
+      - key: FLOW_FREE_HOSTING
+        value: "true"
+      - key: FLOW_STORAGE_MODE
+        value: ephemeral
       - key: FLOW_PROVIDER
         value: local
       - key: FLOW_DATABASE_URL

@@ -16,6 +16,8 @@ from .config import settings
 logging.basicConfig(level=logging.INFO,format='{"level":"%(levelname)s","message":"%(message)s"}')
 @asynccontextmanager
 async def lifespan(app):
+    if settings.free_hosting and (settings.provider != "local" or settings.provider_key.get_secret_value()):
+        raise RuntimeError("Free demo mode requires the local provider without a provider key")
     if settings.environment=="hosted":
         if len(settings.api_token.get_secret_value()) < 32 or len(settings.demo_password.get_secret_value()) < 12:
             raise RuntimeError("Hosted mode requires a strong API token and demo password")
@@ -71,7 +73,7 @@ def audit():
 @api_router.get("/api/connectors")
 def connectors(): return health()
 @api_router.get("/api/settings")
-def config(): return {"provider":settings.provider,"model":settings.model or "deterministic","key_configured":bool(settings.provider_key.get_secret_value()),"authentication_enabled":bool(settings.api_token.get_secret_value()),"execution_enabled":False}
+def config(): return {"provider":settings.provider,"model":settings.model or "deterministic","key_configured":bool(settings.provider_key.get_secret_value()),"authentication_enabled":bool(settings.api_token.get_secret_value()),"execution_enabled":False,"storage_mode":settings.storage_mode,"free_hosting":settings.free_hosting}
 @api_router.get("/api/overview")
 def overview():
     records=incidents()

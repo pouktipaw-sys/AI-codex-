@@ -3,8 +3,8 @@ Environment: Python 3.12.14, Node 24.19.0, Linux. Commands ran in this checkout.
 
 | Check | Observed result |
 |---|---|
-| pytest -q | 25 passed |
-| npm test --prefix frontend | 4 passed |
+| pytest -q | 27 passed |
+| npm test --prefix frontend | 7 passed |
 | npm run build --prefix frontend | TypeScript and Vite production build passed |
 | Actual uvicorn startup and HTTP investigation | Passed on loopback with isolated SQLite database |
 | MCP stdio handshake, tool discovery, permission/schema errors | Passed as part of pytest |
@@ -23,3 +23,5 @@ Hosted-demo preparation also tests shared-password sessions, cookie security, ex
 The production Docker image was built successfully. scripts/test_container.py passed against a real container: frontend index and assets, anonymous data denial, secure login cookie, investigation creation, nonexecuting approval, and persistence after container restart on a named volume. This checks local container persistence, not Render's managed disk or public HTTPS. Container OS package scanning and full-browser rendering were not performed.
 
 Render preparation follow-up: the Blueprint with auto-generated demo password passed validation against the current public Render JSON Schema. The Render CLI is not installed, so no platform-aware CLI validation or service provisioning is claimed.
+
+Free-mode follow-up: backend tests cover ephemeral-storage disclosure and rejection of non-local paid model configuration. Frontend tests cover the free-hosting notice and real report serialization/download cleanup. No durable storage is claimed for the free cloud service.

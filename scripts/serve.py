@@ -11,4 +11,4 @@ if os.getuid() == 0:
     os.setgid(10001)
     os.setuid(10001)
 
-uvicorn.run("flowstate.api:app", host="0.0.0.0", port=int(os.environ.get("PORT", "8000")), workers=1, proxy_headers=True)
+uvicorn.run("flowstate.api:app", host="0.0.0.0", port=int(os.environ.get("PORT", "8000")), workers=1, proxy_headers=True, access_log=False)

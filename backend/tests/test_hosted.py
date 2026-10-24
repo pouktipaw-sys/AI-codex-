@@ -76,3 +76,16 @@ def test_sessions_expire_after_eight_hours(protected, monkeypatch):
     now=web_auth.time.time()
     monkeypatch.setattr(web_auth.time,"time",lambda:now+web_auth.SESSION_SECONDS+1)
     assert not web_auth.valid_session(token)
+
+def test_free_demo_discloses_ephemeral_storage(client, monkeypatch):
+    monkeypatch.setattr(settings,"free_hosting",True)
+    monkeypatch.setattr(settings,"storage_mode","ephemeral")
+    response=client.get("/api/settings")
+    assert response.json()["free_hosting"] is True
+    assert response.json()["storage_mode"]=="ephemeral"
+
+def test_free_mode_rejects_potentially_billable_ai(monkeypatch):
+    monkeypatch.setattr(settings,"free_hosting",True)
+    monkeypatch.setattr(settings,"provider","openai")
+    with pytest.raises(RuntimeError,match="local provider"):
+        with TestClient(app): pass

@@ -6,7 +6,7 @@ FlowState correlates fictional incidents, service changes and runbooks into insp
 This repository was empty at the start. The application is newly implemented. It is a runnable local engineering demonstration with production-oriented boundaries, not a claim of production readiness.
 
 ## Interview demo hosting
-A single-service Docker deployment and protected demo login are prepared for Render. See [deployment instructions](docs/DEPLOYMENT.md). Hosting requires your Render connection, a private demo password and approval of Render's displayed service/disk cost. **No live URL is available yet.**
+The default Render configuration uses the **Free** compute plan, no paid disk and no paid AI calls. It runs the real FastAPI backend and React interface behind a shared-password demo login. See [deployment instructions](docs/DEPLOYMENT.md). Free hosting sleeps after inactivity and loses local history on restart/redeploy; download investigation reports to keep a copy. **No live URL has been verified yet.**
 
 ## Quick start — Linux / WSL
 Requires Python 3.11+ and Node 22.12+ (Node 24 recommended).

@@ -40,3 +40,16 @@ it('loads actual metrics, investigates, and records an approval reason',async()=
  const call=mock.mock.calls.find(([url])=>String(url).includes('/decision'));
  expect(JSON.parse(call![1]!.body as string)).toEqual({decision:'approved',reason:'Verified the cited evidence'});
 });
+it('discloses free hosting sleep and temporary history without promising persistence',async()=>{
+ vi.stubGlobal('fetch',vi.fn(async(input:RequestInfo|URL)=>{
+   const url=String(input);
+   const data=url.endsWith('/settings')?{provider:'local',free_hosting:true,storage_mode:'ephemeral'}:url.endsWith('/overview')?{}:[];
+   return {ok:true,json:async()=>data} as Response;
+ }));
+ render(<App/>);
+ expect(await screen.findByRole('note')).toHaveTextContent('The service can sleep when idle');
+ expect(screen.getByRole('note')).toHaveTextContent('Investigation history may reset');
+ fireEvent.click(screen.getByRole('button',{name:'Settings'}));
+ expect(screen.getByText(/This free demo uses temporary server storage/)).toBeInTheDocument();
+ expect(screen.queryByText(/history persist across restarts/)).not.toBeInTheDocument();
+});

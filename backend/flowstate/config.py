@@ -5,6 +5,8 @@ import os
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="FLOW_", env_file=".env", extra="ignore")
     environment: Literal["local", "hosted"] = "local"
+    free_hosting: bool = False
+    storage_mode: Literal["persistent", "ephemeral"] = "persistent"
     demo_password: SecretStr = SecretStr("")
     frontend_dir: str = "frontend/dist"
     allowed_hosts: list[str] = ["localhost","127.0.0.1","testserver"]
