@@ -1,0 +1,29 @@
+[
+  {
+    "incident": "INC-1042",
+    "retrieval_precision": 1.0,
+    "retrieval_recall": 1.0,
+    "citation_correctness": 1.0,
+    "hypothesis_grounding": 1.0,
+    "action_safety": true,
+    "latency_ms": 8.98
+  },
+  {
+    "incident": "INC-1043",
+    "retrieval_precision": 1.0,
+    "retrieval_recall": 1.0,
+    "citation_correctness": 1.0,
+    "hypothesis_grounding": 1.0,
+    "action_safety": true,
+    "latency_ms": 4.15
+  },
+  {
+    "incident": "INC-1044",
+    "retrieval_precision": 1.0,
+    "retrieval_recall": 1.0,
+    "citation_correctness": 1.0,
+    "hypothesis_grounding": 1.0,
+    "action_safety": true,
+    "latency_ms": 4.91
+  }
+]
