@@ -6,7 +6,7 @@ The checked-in render.yaml Blueprint declares one Docker web service in Frankfur
 
 1. Sign in to Render and connect the GitHub account containing pouktipaw-sys/AI-codex-.
 2. Create a Blueprint from that repository and review render.yaml.
-3. Set FLOW_DEMO_PASSWORD to a unique password of at least 12 characters. Keep it out of Git and send it to interviewers separately. FLOW_API_TOKEN is generated privately by Render; do not share it.
+3. Render automatically generates FLOW_DEMO_PASSWORD and FLOW_API_TOKEN. After deployment, reveal only FLOW_DEMO_PASSWORD in the service Environment page and share it privately with interviewers. Never share FLOW_API_TOKEN. Existing generated values are preserved on later syncs.
 4. Review and accept Render's current service/disk charges before deploying.
 5. Wait for the service's build and health check to pass. Render supplies the HTTPS URL and RENDER_EXTERNAL_HOSTNAME automatically.
 6. Open the URL in a private browser window. Verify login, investigate Northstar, approve an action, sign out and sign back in. Restart the service and verify the history survives.
@@ -15,9 +15,9 @@ The checked-in render.yaml Blueprint declares one Docker web service in Frankfur
 The deployment uses local deterministic mode, fictional records and no action executor. One process/instance writes SQLite on /var/data/flowstate/flowstate.db. Do not scale horizontally or remove the disk. Persistent disks are not backups; configure backups/exports before relying on the history.
 
 ## One-click entry point
-https://dashboard.render.com/select-repo?type=blueprint
+https://dashboard.render.com/blueprint/new?repo=https://github.com/pouktipaw-sys/AI-codex-
 
-Choose this repository. The deployment still requires a Render account, the password and acceptance of the displayed cost.
+Choose this repository. The deployment requires a Render account, GitHub authorization if prompted, and acceptance of the displayed cost. Both secrets are generated automatically; no password entry is required at creation.
 
 ## Container run outside Render
 After building the image:
@@ -53,3 +53,5 @@ Shared visitors can see and alter the same fictional investigation history. This
 
 ## Current verification boundary
 Local tests and container checks are documented in VERIFICATION.md. Render provisioning, HTTPS, disk persistence across Render restarts and actual public access must be confirmed on the deployed service. Do not describe the application as online until the platform returns a successful deployment and the access flow is verified.
+
+The current Render connection can create web services but does not expose attached-disk or Blueprint-creation operations. This Blueprint applies the complete service and persistent disk together through the Dashboard. Creating only the web service via the connection would not attach the disk or make SQLite persistent.

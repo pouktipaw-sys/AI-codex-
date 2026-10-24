@@ -20,4 +20,4 @@ services:
       - key: FLOW_API_TOKEN
         generateValue: true
       - key: FLOW_DEMO_PASSWORD
-        sync: false
+        generateValue: true

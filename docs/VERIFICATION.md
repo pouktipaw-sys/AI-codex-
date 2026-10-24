@@ -21,3 +21,5 @@ Hosted-demo preparation also tests shared-password sessions, cookie security, ex
 
 
 The production Docker image was built successfully. scripts/test_container.py passed against a real container: frontend index and assets, anonymous data denial, secure login cookie, investigation creation, nonexecuting approval, and persistence after container restart on a named volume. This checks local container persistence, not Render's managed disk or public HTTPS. Container OS package scanning and full-browser rendering were not performed.
+
+Render preparation follow-up: the Blueprint with auto-generated demo password passed validation against the current public Render JSON Schema. The Render CLI is not installed, so no platform-aware CLI validation or service provisioning is claimed.
