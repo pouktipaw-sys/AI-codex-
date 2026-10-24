@@ -35,3 +35,9 @@ Verified URL: https://flowstate-ai-demo.onrender.com
 Actual HTTPS checks passed: frontend and compiled download feature, anonymous API denial, protected cookie login, local/no-key/free/ephemeral settings, Northstar source citations, graph with contradictory evidence, approval with not_executed status, replay including the approval event, audit access and logout denial. The smoke test created a fictional-data investigation with an explicitly labeled verification decision.
 
 No full-browser rendering or remote file-download interaction was tested. The report serializer/download controls are covered by frontend tests. Free cloud history is temporary; durable persistence is not claimed. Deployment auto-updates are off to avoid unintended rebuilds and preserve the verified running version. Later documentation-only commits do not change that deployed application build.
+
+
+## Incident-ledger redesign verification
+The visual redesign passed all 7 frontend tests and TypeScript/Vite production build. npm audit reported zero known vulnerabilities after adding self-hosted IBM Plex Sans.
+
+Actual local Chromium checks ran against the real FastAPI API with an isolated fictional SQLite database at 1440×1100 and 390×844 viewports. Login, populated overview, investigation creation, graph source inspection, absence of graph dot background, approval with a required reason, actual JSON report download containing the approved/not_executed decision, replay, knowledge search, connector-unavailable controls, and mobile layouts passed with no page JavaScript errors. A mobile login overflow found during testing was corrected before the passing run. Desktop and mobile screenshots were visually inspected. This supersedes the earlier local full-browser verification limitation for these flows; it is not a comprehensive accessibility audit or coverage of every browser.

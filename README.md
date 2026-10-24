@@ -41,7 +41,7 @@ Startup seeds missing demo records without overwriting existing records. Investi
 - Approve/reject decisions with required reason, conflict protection and no external side effects.
 - Read-only local ticket connector; visible health and permissions.
 - Eight official-SDK MCP tools over stdio with process-level scope restrictions.
-- Responsive dark UI, keyboard controls, safe text rendering.
+- Responsive incident-ledger interface: paper and ink, semantic record lists, keyboard controls, safe text rendering.
 
 ## Verification
 ```bash
@@ -66,6 +66,7 @@ Edit the backend environment and restart:
 With no key, the engine uses deterministic local results. Provider output can improve summary/draft wording; it cannot alter citations, hypotheses or actions. Live provider calls have not been verified without credentials. Settings display server configuration; model/secret changes are made in the environment, not the browser. Use the Settings token input if API authorization is enabled.
 
 ## Documentation
+- [Design direction](docs/DESIGN.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Initial audit and plan](docs/AUDIT.md)
 - [MCP integration](docs/MCP.md)

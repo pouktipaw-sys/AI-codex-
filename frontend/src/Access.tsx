@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {LockKeyhole, Workflow} from 'lucide-react';
+import {ArrowRight} from 'lucide-react';
 import {api} from './api';
 import App from './App';
 
@@ -52,9 +52,9 @@ export default function Access() {
   }
 
   if (!session) {
-    return <div className="access-screen"><section className="access-card">
-      <div className="logo"><Workflow/></div><h1>FlowState AI</h1>
-      <p>{error || 'Opening your workspace…'}</p>
+    return <div className="access-screen"><section className="access-loading" aria-live="polite">
+      <div className="access-brand"><span className="brand-mark">FS</span><span>FlowState AI</span></div>
+      <p>{error || 'Opening the incident desk…'}</p>
       {error && <button onClick={check}>Retry</button>}
     </section></div>;
   }
@@ -67,21 +67,39 @@ export default function Access() {
     </>;
   }
 
-  return <div className="access-screen"><section className="access-card">
-    <div className="logo"><Workflow size={28}/></div>
-    <span className="eyebrow">FLOWSTATE AI · INTERACTIVE DEMO</span>
-    <h1>Investigate with evidence.</h1>
-    <p>A working operations workspace with fictional incidents, connected evidence and accountable decisions.</p>
-    <div className="access-highlights"><span>Evidence graph</span><span>Investigation replay</span><span>Human approvals</span></div>
-    <form onSubmit={signIn}>
-      <label htmlFor="demo-password">Demo access password</label>
-      <input id="demo-password" type="password" autoComplete="current-password" required maxLength={256}
-        value={password} onChange={event => setPassword(event.target.value)}/>
-      {error && <p role="alert" className="access-error">{error}</p>}
-      <button disabled={busy || !password}><LockKeyhole size={15}/>
-        {busy ? 'Opening workspace…' : 'Enter demo workspace'}
-      </button>
-    </form>
-    <small>Invitation-only demo · Fictional data · No external actions</small>
-  </section></div>;
+  return <div className="access-screen">
+    <div className="access-layout">
+      <section className="access-context" aria-labelledby="desk-title">
+        <div className="access-brand"><span className="brand-mark">FS</span><span>FlowState AI</span></div>
+        <span className="access-edition">OPERATIONS / INVESTIGATION RECORDS</span>
+        <h1 id="desk-title">The incident desk.</h1>
+        <p className="access-brief">Trace an incident through its source records. Compare explanations, check what is missing, and record the next decision.</p>
+        <section className="access-case" aria-labelledby="case-title">
+          <div className="access-case-meta"><span>FICTIONAL DEMONSTRATION</span><span>CASE / INC-1042</span></div>
+          <h2 id="case-title">Northstar authentication failures</h2>
+          <p>Repeated scope rejections after a permissions rollout. The cause remains unverified.</p>
+          <dl className="access-source-index">
+            <div><dt>CHG-281</dt><dd>Strict scope enforcement rollout</dd></div>
+            <div><dt>KB-17</dt><dd>Insufficient-scope runbook</dd></div>
+            <div><dt>INC-998</dt><dd>Previous policy migration incident</dd></div>
+            <div><dt>KB-19</dt><dd>Healthy refresh probes / counterevidence</dd></div>
+          </dl>
+        </section>
+      </section>
+      <section className="access-form-panel" aria-labelledby="access-title">
+        <div className="access-form-heading"><span className="eyebrow">INVITED ACCESS</span><h2 id="access-title">Open the workspace</h2></div>
+        <p>Use the demonstration password supplied by the project owner. No account is needed.</p>
+        <form onSubmit={signIn}>
+          <label htmlFor="demo-password">Demo access password</label>
+          <input id="demo-password" type="password" autoComplete="current-password" required maxLength={256}
+            value={password} onChange={event => setPassword(event.target.value)} aria-describedby={error ? 'access-error' : undefined}/>
+          {error && <p id="access-error" role="alert" className="access-error">{error}</p>}
+          <button disabled={busy || !password}>
+            {busy ? 'Opening workspace…' : 'Enter demo workspace'}<ArrowRight size={16} aria-hidden="true"/>
+          </button>
+        </form>
+        <p className="access-footnote">All source records are fictional. Approval decisions are recorded without sending messages or executing external actions.</p>
+      </section>
+    </div>
+  </div>;
 }
